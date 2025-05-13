@@ -2,7 +2,7 @@
 
 In AOSP, 'device/<vendor>/...' is part of the source tree, not something that only appears after build. It's where all of the device-specific resources lives--things like kernel configs, BoardConfig.mk, device-specific HALs, init scripts, and so on.
 
-# Where to find 'device/<vendor>/' in Android-13_r35 aosp build
+# Where to find 'device/[<vendor>]/' in Android-13_r35 aosp build
 After running 'repo sync' (but before any build), We see at the top of AOSP checkout a directory called 'device/':
 
 ![alt text](image.png)
