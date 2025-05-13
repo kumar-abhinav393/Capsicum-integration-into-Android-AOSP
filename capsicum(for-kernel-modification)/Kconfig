@@ -1,0 +1,5 @@
+config CAPSICUM_SYSCALLS
+    bool "Capsicum capability mode syscalls"
+    default n
+    help
+      Enable Capsicum capability mode system calls.

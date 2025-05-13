@@ -1,0 +1,1 @@
+obj-$(CONFIG_CAPSICUM_SYSCALLS) += capsicum.o
