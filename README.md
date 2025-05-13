@@ -59,8 +59,8 @@ where
 ### Step-1: Placeholders for syscall numbers
 (https://android.googlesource.com/kernel/msm/+/refs/heads/android-msm-wahoo-4.4-pie-r2/Documentation/adding-syscalls.txt)
 
-*    # define SYS_cap_new    350
-*    # define SYS_cap_enter  352
+*    #define SYS_cap_new    350
+*    #define SYS_cap_enter  352
 
 We eventually need to verify and replace these with actual sys call numbers defiend in kernel modifications.
 - Path-1: arch/x86/entry/syscalls/syscall_64.tbl
@@ -102,14 +102,14 @@ where asmlinkage is the calling convention for syscalls.
 * Path: (https://android.googlesource.com/kernel/common/+/refs/heads/android13-5.10/include/uapi/asm-generic/unistd.h)
 
 * for 64-bit/generic
-        # define __NR_cap_new 334
-        # define __NR_cap_enter 335
+        #define __NR_cap_new 334
+        #define __NR_cap_enter 335
         __SYSCALL(__NR_cap_new, SYS_cap_new)
         __SYSCALL(__NR_cap_enter, SYS_cap_enter)
 
 * for 32-bit/generic
-        # define __NR_cap_new 381
-        # define __NR_cap_enter 382
+        #define __NR_cap_new 381
+        #define __NR_cap_enter 382
         __SYSCALL(__NR_cap_new, SYS_cap_new)
         __SYSCALL(__NR_cap_enter, SYS_cap_enter)
 
