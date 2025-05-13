@@ -2,14 +2,14 @@
 
 In AOSP, 'device/<vendor>/...' is part of the source tree, not something that only appears after build. It's where all of the device-specific resources lives--things like kernel configs, BoardConfig.mk, device-specific HALs, init scripts, and so on.
 
-# Where to find 'device/[<vendor>]/' in Android-13_r35 aosp build
+# Where to find 'device/vendor/' in Android-13_r35 aosp build
 After running 'repo sync' (but before any build), We see at the top of AOSP checkout a directory called 'device/':
 
 ![alt text](image.png)
 
 When you do 'lunch aosp_cf_x86_phone-userdebug' and select the build target, you're choosing the Cuttlefish target, which lives under 'device/google/cuttlefish/'. All of your device-specific build files--AndroidProducts.mk, BoardConfig.mk, device overlays, etc -- are in that directory.
 
-Your custom library (libcapsicum) must be placed in 'device/<vendor>/libcapsicum' so that Soong picks it up before it generates anything in 'out/'.
+Your custom library (libcapsicum) must be placed in 'device/vendor/libcapsicum' so that Soong picks it up before it generates anything in 'out/'.
 
 # Android Module (for libapsicum Native Library)
 - A single-built unit in AOSP. It can be an app, a native library, a java service, an executable, or a HAL.
