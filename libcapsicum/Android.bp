@@ -1,0 +1,25 @@
+cc_library_shared {
+    name: "libcapsicum",
+
+    // Source files for your Capsicum wrapper implementation
+    srcs: ["libcapsicum.cpp"],
+
+    // Include headers if you have them
+    export_include_dirs: ["include"],
+
+    // Implicit Dependencies on system libraries, such as libc
+    shared_libs: [
+        "libc", // standard C library, common dependency
+    ],
+
+    // Additional compilation flags
+    cflags: [
+        "-Wall",             // enables all compiler warnings
+        "-Werror",           // treats all warnings as errors to enforce strict code correctness
+        "-Wno-unused-parameter", // disables warnings for unused parameters if intentionally unused
+        "-std=c++17",        // ensures compatibility with modern C++ standards
+    ],
+
+    // Choose standard C++ library implementation
+    stl: "libc++_static",
+}
