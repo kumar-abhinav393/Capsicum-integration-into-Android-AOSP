@@ -27,13 +27,14 @@ Since I am targeting the Cuttlefish build of Android-13_r35, the file structure 
 This tells Soong exactly where your new native-library module lives.
 
 ## Step-2: Invoking the Build
-source build/envsetup.sh
-lunch aosp_cf_x86_64_phone-userdebug
-m libcapsicum
+- source build/envsetup.sh
+- lunch aosp_cf_x86_64_phone-userdebug
+- m libcapsicum
 
-'source build/envsetup.sh': loads the 'lunch', 'm', and other helper commands.
-'lunch aosp_cf_x86_64_phone-userdebug': picks the target(Cuttlefish x86_64 emulator, userdebug variant)
-'m libcapsicum': builds only libacapsicum module.
+where
+* 'source build/envsetup.sh': loads the 'lunch', 'm', and other helper commands.
+* 'lunch aosp_cf_x86_64_phone-userdebug': picks the target(Cuttlefish x86_64 emulator, userdebug variant)
+* 'm libcapsicum': builds only libacapsicum module.
 
 ## Step-3: What Soong does
 - Scans th entire tree for Android.bp files (including the new one).
