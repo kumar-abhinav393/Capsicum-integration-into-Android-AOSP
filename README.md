@@ -5,21 +5,7 @@ In AOSP, 'device/<vendor>/...' is part of the source tree, not something that on
 # Where to find 'device/<vendor>/' in Android-13_r35 aosp build
 After running 'repo sync' (but before any build), We see at the top of AOSP checkout a directory called 'device/':
 
-<android-root>/
-├── art/
-├── bionic/
-├── build/
-├── frameworks/
-├── kernel/
-├── system/
-├── vendor/
-├── device/
-│   ├── generic/         ← “generic” emulator devices (goldfish, generic_x86_64…)
-│   ├── google/          ← Google-maintained device configs
-│   │   └── cuttlefish/  ← Cuttlefish emulator support (aosp_cf_x86_64_phone-userdebug)
-│   ├── intel/           ← (if any Intel-specific boards)
-│   └── ...              ← other manufacturers (e.g. samsung/, sony/, etc.)
-└── …
+![alt text](image.png)
 
 When you do 'lunch aosp_cf_x86_phone-userdebug' and select the build target, you're choosing the Cuttlefish target, which lives under 'device/google/cuttlefish/'. All of your device-specific build files--AndroidProducts.mk, BoardConfig.mk, device overlays, etc -- are in that directory.
 
@@ -35,12 +21,8 @@ Your custom library (libcapsicum) must be placed in 'device/<vendor>/libcapsicum
 The file structure of Android Module will be:
 
 Since I am targeting the Cuttlefish build of Android-13_r35, the file structure for libcapsicum module is:
-<android-root>/device/google/cuttlefish/
-└── libcapsicum/           ← create this new folder here
-    ├── Android.bp
-    ├── libcapsicum.cpp
-    └── include/
-        └── libcapsicum.h
+
+![alt text](image-1.png)
 
 This tells Soong exactly where your new native-library module lives.
 
