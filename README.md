@@ -148,4 +148,20 @@ libcapsicum.h is the contract between capsicum syscall wrappers and the rest of 
 
 The header should live alongside the library's sources in a place that Soong will pick up via 'export_include_dirs' setting in Android.bp.
 
-## Work Against caprights.h
+## Work Against capsicum_rights.h
+* Path: 
+![alt text](image-3.png)
+
+The header file provides definitions and macros for capsicum capability rights. These rights define exactly what operations can be performed on capability-wrapped file descriptor.
+
+### Example of defined rights in the header
+* CAP_READ : permission to read from the descriptor
+* CAP_WRITE : permission to write to the descriptor
+
+These rights form the core policy definitions that govern what isolated processes can do once capability mode is enabled (cap_enter()).
+
+### Importance
+- libcapsicum.cpp wrapper uses these rights to clearly specify permissions for capability file descriptors.
+- libcapsicum.h file references these rights types (e.g., cap_rights_t) and constants (CAP_READ, CAP_WRITE) for use by callers.
+- Without clearly defined rights and types, Capsicum implementation would be incomplete or unclear to users.
+

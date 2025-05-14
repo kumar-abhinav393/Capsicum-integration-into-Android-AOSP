@@ -10,7 +10,7 @@
 // Thesis: "To extend the isolated process feature in Android with file system and Binder IPC capabilities"
 //         (Capsicum mode for Isolated Processes in Android)
 
-#include "libcapsicum.h"                // Include your header for function declarations (if available)
+#include "libcapsicum.h"
 #include <unistd.h>
 #include <sys/syscall.h>
 #include <errno.h>
