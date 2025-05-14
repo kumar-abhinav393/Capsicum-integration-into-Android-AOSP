@@ -59,6 +59,8 @@ where
 ### Step-1: Placeholders for syscall numbers
 (https://android.googlesource.com/kernel/msm/+/refs/heads/android-msm-wahoo-4.4-pie-r2/Documentation/adding-syscalls.txt)
 
+* Path: (https://android.googlesource.com/kernel/common/+/refs/heads/android13-5.10/arch/x86/entry/syscalls/)
+
 *    #define SYS_cap_new    350
 *    #define SYS_cap_enter  352
 
@@ -78,7 +80,7 @@ In 'arch/x86/entry/syscalls/syscall_32.tbl'
 
 ### Step-2: Generic system call implementation
 #### a. Define the syscall entry point (capsicum)
-(https://android.googlesource.com/kernel/common/+/refs/heads/android13-5.10/kernel/)
+* Path: (https://android.googlesource.com/kernel/common/+/refs/heads/android13-5.10/kernel/)
 
 ![alt text](image-2.png)
 
@@ -129,3 +131,21 @@ where asmlinkage is the calling convention for syscalls.
 To integrate the capsicum Kconfig into the broader kernel configuration, You must add below entry in the above mentioned path:
 
         source 'kernel/capsicum /Kconfig'
+
+
+## Work Against libacapsicum.h
+The libcapsicum.h header serves as the public interface for native capsicum library.
+
+- It declares the signatures of the wrapper functions, so that any C/C++, JNI, or other native code can call them without knowing the underlying implementation details in libcapsicum.cpp.
+- Only what's declared in the header is visible externally.
+- To make this header discoverable by JNI, build rule in Android.bp use 'export_include_dirs'.
+
+libcapsicum.h is the contract between capsicum syscall wrappers and the rest of the Android codebase--without it, consumers wouldn't know how to correctly invoke or integrate new capability mode functionality.
+
+### Suitable place to put libcapsicum.h
+
+![alt text](image-1.png)
+
+The header should live alongside the library's sources in a place that Soong will pick up via 'export_include_dirs' setting in Android.bp.
+
+## Work Against caprights.h
