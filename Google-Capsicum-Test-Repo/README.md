@@ -1,22 +1,11 @@
 # Google Capsicum-Test (Dev Branch) Analysis
 (https://github.com/google/capsicum-test/tree/dev)
 
-## Repository Structure and Supporting files
-- The Google Capsicum-Test repository is a Capsicum user-space test suite. 
-- It primarily targets FreeBSD (which natively supports Capsicum) and a modified Linux (via the Capsicum-Linux project).
-- In the dev branch, the core capsicum library code resides in the 'libcaprights/' subdirectory.
-
-### Key files in dev branch
-- libcaprights/capsicum.c : Implements Capsicum system call wrappers and related helper functions (largely for Linux).
-- libcaprights/capsicum.h : Header declaring the capsicum user-space API (types, constants, and function prototypes) for the library.
-- capsicum_rights.h : Header that defines capability rights bits and provides compatibility macros to handle differences between FreeBSD versions.
-
-### Additional Support files in libcaprights/:
-- linux-bpf-capmode.c/.h : Implements 'cap_enter' and capability-mode sandboxing on Linux (using seccomp BPF and prctl).
-- procdesc.c/.h : Implements process descriptors (pdfork, pdkill, etc) for platforms that support or emulate them.
-- signal.c : Helpers for signal and process-handling (used by procdesc logic).
-
-### OS-specific headers in the root directory:
-- 'capsicum-freeBSD.h' and 'capsicum-linux.h' -- Setup macros and constants depending on the target OS.
+The Capsicum-Test repository's dev branch contains a mix of source files and platform-specific headers, plus a subdirectory for a Linux compatibility library. Key components include:
+- Platform headers: `capsicum-freebsd.h` and `capsicum-linux.h` (included via a unified `capsicum.h`). These define OS-specific constants feature meacros.
+- Portability layer: `capsicum.h` and `capsicum-rights.h` - provide a consistent Capsicum API across FreeBSD and Linux.
+- Test framework: `capsicum-test.h` (macros/utilities for Google Test) and `capsicum-test-main.cc` (the main function and test environment setup).
+- Capsicum userspace library (Linux only): The `libcaprights/` subdirectory contains C files (e.g., `capsicum.c`, `procdesc.c`, etc) implementing Capsicum syscalls for Linux userland. This is built as lbrary (`libcaprights`) on Linux systems.
+- Test case sources: Numerous `.cc` (and a few `.c`) files implement the actual unit tests. Each focuses on a subsystem: e.g., file descriptors and rights (`capability-fd*.cc`, `fcntl.cc`, `ioctl.cc`), capability mode behaviour (`capmode.cc`, `smoketest.c`)
 
 
