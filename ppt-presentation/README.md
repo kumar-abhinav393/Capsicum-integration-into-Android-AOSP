@@ -57,7 +57,7 @@
 ----------------------------------------------------------------------------------------------------------
 
 ### Agenda - What We'll Cover Today
-#### 1. Why we need Capcisum oon Android
+#### 1. Why we need Capsicum on Android
   - A quick recap of the over-privilege problem in isolated services and why a capability model is the right fix.
 
 #### 2. Three Integration Stages in a Nutshell
@@ -82,18 +82,57 @@
 #### 2. Capsicum trims the fat: 
   - Capsicum's idea is simple--wrap each file descriptor in a capability that lists exactly what actions are allowed -- nothing more. If the helper tries anything outside that list, the kernel blocks it on the spot.
 #### Two tiny syscalls, big payoff: 
-  - We need `cap_new()` to create a capability and `cap_enter()` to lock the process into this strict mode.
+  - We need `cap_new()` to create a capability-wrapped fd and `cap_enter()` to lock the process into a strict capability mode.
+
+----------------------------------------------------------------------------------------------------------
+
+### Stage 3 Steps - Kernel
+#### 1. Separate directory 'capsicum/'
+  - Firstly create a separate directory 'capsicum' to store files(capsicum.c, Kconfig, Makefile)
+#### 2. Syscall placeholders
+  - Add the two new entries to the kernel's syscall table.
+#### 3. Bring in the Capsicum code
+  - Cherry pick the `cap_new()` and `cap_enter()` sources(specific to Linux kernel) from Google's capsicum-test dev branch.
+#### 3. Generic system call implementation
+  - Define syscalls entry point by creating macros with cherry picked code for both syscalls in 'capsicum.c' file.
+#### 4. Hook up the syscalls
+  - Hook into the generic syscall table of both 64 and 32 bit generic and provide a fallback stub to compile them.
+#### 5. Make it configurable
+  - Introduce a `CONFIG_<FEATURE>_SYSCALL` option by creating a Kconfig and gaurd the implementation in Makefile.
+#### 6. Run a quick smoke test
+  - Execute a tiny 'hello-cap' program to wrap a fd with `cap_new(()` and drops into capability mode with `cap_enter()`.
 
 ----------------------------------------------------------------------------------------------------------
 
 ### Stage 2 Steps - User Space
-#### 1. Write the code
-  - Drop two short C++ files in `libacapsicum.c` into a new libcapsicum folder: one wraps file descriptor(`cap_new(fd, rights)`), the other puts isolated process into capability mode with wrapped file descriptor (`cap_enter()`).
-#### 2. Add an Android.bp file
+#### 1. Make a `libcapsicum` directory
+  - Keeps all user-space code in oone neat place.
+#### 2. Drops in an `Android.bp` file
   - Tell Soong how to compile the library and spit out `libcapsicum.so` with the right ABI flags.
-#### 3. Create the JNI bridge
-  - One small Java class loads the native lib and exposes `createCapabilityFd()`
+#### 3. Write `libcapsicum.h`
+  - Public header that declares `createCapabilityFd()` and `enable_Capability_Mode()` so any AOSP module can include them.
+#### 4. Write two C/C++ helpers
+  - `createCapabilityFd()` calls `cap_new()`; `enable_Capability_Mode()` calls `cap_enter()` in `libcapsicum.cpp` file.
+#### 5. Create the JNI bridge
+  - One Java class loads the .so and exposes the two helpers to Kotlin/Java apps.
+#### 6. Link a sample isolated service
+  - In the service's `onCreate()`, wrap its file handle and drops into capability mode.
+#### 7. Re-build & Flash AOSP
+  - Library appears under `/system/lib`; the sample app installs cleanly.
+#### 8. Run a quick smoke test
+  - Wrapped reads succeed; any unwrapped access fails--proof that the user-space wiring works.
+
 ----------------------------------------------------------------------------------------------------------
+
+### Stage 1 Steps - Zygote hook
+
+----------------------------------------------------------------------------------------------------------
+
+### Capsicum-test - dev Branch
+#### Purpose & Age
+  - Holds all the cross-platform unit tests that exercise capability mode on both FreeBSD and the old Capsicum-Linux prototype.
+  - First pulled together in the mid 2010s, but the code base traces back to the 2011-2012 FreeBSD 9.x and Capsicum-Linux work.
+  - Still receives tweaks (latest FreeBSD import landed 2022).
 
 
 
